@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreCrud.Web.Data;
 using AspNetCoreCrud.Web.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace AspNetCoreCrud.Web.Controllers
 {
@@ -54,10 +56,26 @@ namespace AspNetCoreCrud.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Rank")] Album album)
+        public async Task<IActionResult> Create([Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Rank")] Album album, List<IFormFile> Image)
         {
+            
             if (ModelState.IsValid)
             {
+                //Upload FIle
+                foreach (var item in Image)
+            {
+                if (item.Length > 0)
+                {
+                    using (var steam = new MemoryStream())
+                    {
+                        await item.CopyToAsync(steam);
+                        album.Image = steam.ToArray();    
+                       
+                        }
+                }
+            }
+                // End Upload File
+
                 context.Add(album);
                 await context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -149,5 +167,7 @@ namespace AspNetCoreCrud.Web.Controllers
         {
             return context.Album.Any(e => e.ID == id);
         }
+
+
     }
 }
