@@ -45,21 +45,36 @@
 
                 <div class="form-group">
                     <label asp-for="Image" class="control-label"></label>
-                    <input type="file" asp-for="Image" class="form-control"  id="files"  />
+                    <input type="file" asp-for="Image" class="form-control" id="upload_image_create" onchange="loadFile(event)" multiple="multiple" />
                     <span asp-validation-for="Image" class="text-danger"></span>
+                    <img id="output" />
                 </div>
-              
+                
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
             </form>
         </div>
     </div>
-
     <div>
         <a asp-action="Index">Back to List</a>
     </div>
+@*Preview Image on upload*@ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-    @section Scripts {
+<script>
+    var loadFile = function(event) {
+        var reader = new FileReader();
+        reader.onload = function(){
+            var output = document.getElementById('output');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+</script>
+
+End Upload Image
+
+@section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }
