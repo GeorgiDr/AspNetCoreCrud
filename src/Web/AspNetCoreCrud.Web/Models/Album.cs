@@ -17,11 +17,12 @@ namespace AspNetCoreCrud.Web.Models
         public string Genre { get; set; }
 
         public DateTime ReleaseDate { get; set; }
+
         [Range(1,100.00)]
         public decimal Price { get; set; }
 
         public int Rank { get; set; }
-
+    
         public byte[] Image { get; set; }
     }
 }

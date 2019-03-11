@@ -9,6 +9,8 @@ using AspNetCoreCrud.Web.Data;
 using AspNetCoreCrud.Web.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Net.Mime;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AspNetCoreCrud.Web.Controllers
 {
@@ -19,11 +21,13 @@ namespace AspNetCoreCrud.Web.Controllers
         public AlbumsController(ApplicationDbContext context)
         {
             this.context = context;
+          
         }
 
         // GET: Albums
         public async Task<IActionResult> Index()
         {
+           
             return View(await context.Album.ToListAsync());
         }
 
@@ -51,14 +55,12 @@ namespace AspNetCoreCrud.Web.Controllers
             return View();
         }
 
-        // POST: Albums/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Rank")] Album album, List<IFormFile> Image)
+        public async Task<IActionResult> Create([Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Rank")] Album album, IEnumerable<IFormFile> Image)
         {
-            
+ 
             if (ModelState.IsValid)
             {
                 //Upload FIle
@@ -71,7 +73,7 @@ namespace AspNetCoreCrud.Web.Controllers
                         await item.CopyToAsync(steam);
                         album.Image = steam.ToArray();    
                        
-                        }
+                     }
                 }
             }
                 // End Upload File
@@ -84,8 +86,22 @@ namespace AspNetCoreCrud.Web.Controllers
         }
 
         // GET: Albums/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, IEnumerable<IFormFile> Image)
         {
+            //Upload FIle
+            foreach (var item in Image)
+            {
+                if (item.Length > 0)
+                {
+                    using (var steam = new MemoryStream())
+                    {
+                        await item.CopyToAsync(steam);
+                       
+
+                    }
+                }
+            }
+            // End Upload File
             if (id == null)
             {
                 return NotFound();
@@ -104,8 +120,9 @@ namespace AspNetCoreCrud.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Rank")] Album album)
-        {
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Artist,Name,Genre,ReleaseDate,Price,Image")] Album album, IEnumerable<IFormFile> Image)
+        { 
+
             if (id != album.ID)
             {
                 return NotFound();
@@ -115,6 +132,19 @@ namespace AspNetCoreCrud.Web.Controllers
             {
                 try
                 {
+                    //Upload FIle
+                    foreach (var item in Image)
+                    {
+                        if (item.Length > 0)
+                        {
+                            using (var steam = new MemoryStream())
+                            {
+                                await item.CopyToAsync(steam);
+                                album.Image = steam.ToArray();
+
+                            }
+                        }
+                    }
                     context.Update(album);
                     await context.SaveChangesAsync();
                 }

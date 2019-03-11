@@ -10,6 +10,7 @@
 <div>
     <h4>Album</h4>
     <hr />
+    <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" style="width: 283px;height: 218px;"/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Artist)
