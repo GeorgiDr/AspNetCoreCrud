@@ -10,6 +10,7 @@
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" style="width: 283px;height: 218px;"/>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
                 <label asp-for="Artist" class="control-label"></label>
