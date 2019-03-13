@@ -14,5 +14,7 @@ namespace AspNetCoreCrud.Web.Data
         {
         }
         public DbSet<AspNetCoreCrud.Web.Models.Album> Album { get; set; }
+
+        public DbSet<AspNetCoreCrud.Web.Models.Category> Category { get; set; }
     }
 }

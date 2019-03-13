@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Net.Mime;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using AspNetCoreCrud.Web.Models.ViewModel;
 
 namespace AspNetCoreCrud.Web.Controllers
 {
@@ -52,7 +53,10 @@ namespace AspNetCoreCrud.Web.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
-            return View();
+            ViewModelCategoryAlbum s1 = new ViewModelCategoryAlbum();
+            var item = context.Category.ToList();
+            s1.Categories = item;
+            return View(s1);
         }
 
        
